@@ -2,6 +2,14 @@
 
 Team Project that was created during course in NapoleonIT (Python BackEnd Developer Course)
 
+## About
+
+Will be updated soon
+
+## Usage
+
+Will be updated soon
+
 ## Technology stack
 
 - **Sanic** - as a web server

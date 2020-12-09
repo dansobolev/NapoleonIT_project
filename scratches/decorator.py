@@ -9,7 +9,18 @@ from sanic.response import HTTPResponse, json
 app = Sanic(__name__)
 
 
-@app.route('/', methods=['GET', 'POST'])
+def decorator(application: Sanic, uri, methods):
+    def wrapper(handler):
+        application.add_route(
+            handler=handler,
+            uri=uri,
+            methods=methods
+        )
+        return handler
+    return wrapper
+
+
+@decorator(application=app, uri='/', methods=['POST', 'GET'])
 async def health_endpoint(request: Request) -> HTTPResponse:
     response = {
         'hello': 'world'
