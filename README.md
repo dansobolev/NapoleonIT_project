@@ -1,6 +1,6 @@
 # NapoleonIT Project
 
-Team and solo projects during course in NapoleonIT (Python BackEnd Developer Course)
+Team Project that was created during course in NapoleonIT (Python BackEnd Developer Course)
 
 ## Technology stack
 
