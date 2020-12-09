@@ -1,6 +1,6 @@
-from sanic import Sanic
+from sanic import Sanic, response
 from sanic.log import logger
-from sanic.response import json
+from sanic.response import json, text
 
 app = Sanic(__name__)
 
@@ -9,13 +9,20 @@ app = Sanic(__name__)
 
 @app.route('/')
 async def main(request):
-    logger.info("And there is the log: ")
-    return json({"hello": "world"})
+    # logging when requesting to the / point
+    # logger.info("And there is the log: ")
+
+    return json({
+        "parsed": True,
+        "url": request.url,
+        "query_string": request.query_string,
+        "args": request.args,
+        "query_args": request.query_args,
+    })
 
 if __name__ == "__main__":
     app.run(
-        # disable logging
-        access_log=False,
+        access_log=False,  # disable logging
         host='localhost',
         port=8000,
     )
