@@ -1,12 +1,14 @@
+from configs.config import ApplicationConfig
 from transport.sanic.configure_sanic import configure_app
 
 
 if __name__ == '__main__':
-    app = configure_app()
+    config = ApplicationConfig()
+    app = configure_app(config)
 
     app.run(
-        host='localhost',
-        port=8000,
+        host=config.sanic.host,
+        port=config.sanic.port,
+        workers=config.sanic.workers,
+        debug=config.sanic.debug,
     )
-
-

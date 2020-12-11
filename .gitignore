@@ -102,7 +102,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+# .env temporarily delete .env from the gitignore (do not forget to return it back)
 .venv
 env/
 venv/
