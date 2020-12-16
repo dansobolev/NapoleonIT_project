@@ -1,17 +1,15 @@
 from sanic.request import Request
-from sanic.response import HTTPResponse, json
+from sanic.response import BaseHTTPResponse, HTTPResponse, json
+
+from transport.sanic.base import SanicEndpoint
 
 
-# аннотация нужно указывать, чтобы IDE знал объекта какого класса
-# мы собираемся использовать и каждый раз предлагал нам
-# список доступных методов
-# также аннотации используют для лучшей читаемости кода
-async def health_endpoint(request: Request) -> HTTPResponse:
-    response = {
-        'hello': 'world'
-    }
+class HealthEndpoint(SanicEndpoint):
+    async def method_get(self, request: Request, body: dict, *args, **kwargs) -> BaseHTTPResponse:
+        response = {
+            'hello': 'world'
+        }
+        return await self.make_response_json(body=response, status=200)
 
-    if request.method == 'POST':
-        response.update(request.json)
-
-    return json(body=response, status=200)
+    async def method_post(self, request: Request, body: dict, *args, **kwargs) -> BaseHTTPResponse:
+        return await self.make_response_json(body=body, status=200)
