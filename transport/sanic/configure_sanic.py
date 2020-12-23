@@ -8,7 +8,7 @@ from context import Context
 
 def configure_app(config: ApplicationConfig, context: Context):
 
-    # init_db_sqlite(context)
+    init_db_sqlite(config, context)
 
     app = Sanic(__name__)
 
