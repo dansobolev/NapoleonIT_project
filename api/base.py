@@ -2,15 +2,10 @@ from marshmallow import Schema, ValidationError, EXCLUDE
 from sanic.exceptions import SanicException
 
 
-class ApiValidationException(SanicException):
-    status = 400
-
-
-class ApiResponseValidationException(SanicException):
-    status = 500
-
-
 # базовый класс для запросов пользователей (Create, Delete, Patch etc.)
+from api.exceptions import ApiValidationException, ApiResponseValidationException
+
+
 class RequestDto:
     __schema__ = Schema
 
