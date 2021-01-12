@@ -1,4 +1,4 @@
-# модуль для написания логики определенного роута
+# модуль для логики HealthEndpoint
 
 from sanic.request import Request
 from sanic.response import BaseHTTPResponse
