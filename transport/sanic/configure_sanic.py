@@ -12,7 +12,7 @@ def configure_app(config: ApplicationConfig, context: Context):
 
     # произведется подключение к базе данных и объект database запишется
     # в специальную контекстную переменную database
-    init_db_sqlite(context)
+    init_db_sqlite(config, context)
 
     app = Sanic(__name__)
 

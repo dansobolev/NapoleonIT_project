@@ -4,13 +4,13 @@
 from sqlalchemy import create_engine
 
 from context import Context
+from configs.config import ApplicationConfig
 from db.database import DataBase
 
 
-def init_db_sqlite(context: Context):
-    uri = r'sqlite:///db.sqlite'
+def init_db_sqlite(config: ApplicationConfig, context: Context):
     engine = create_engine(
-        uri,
+        config.database.url,
         pool_pre_ping=True,  # для переподключения
     )
 
