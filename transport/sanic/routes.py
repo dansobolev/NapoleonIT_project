@@ -1,8 +1,13 @@
+# модуль для регистрации роутов
+
+from typing import Tuple
+
 from configs.config import ApplicationConfig
-from transport.sanic.endpoints.health import health_endpoint
+from transport.sanic.base import SanicEndpoint
+from transport.sanic.endpoints.health import HealthEndpoint
 
 
-def get_routes(config: ApplicationConfig):
+def get_routes(config: ApplicationConfig) -> Tuple['SanicEndpoint']:
     return (
-        (health_endpoint, '/', ['GET']),
+        HealthEndpoint(config=config, uri='/', methods=('GET', 'POST')),
     )
