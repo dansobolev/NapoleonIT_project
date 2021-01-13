@@ -6,3 +6,7 @@ class DBIntegrityException(Exception):
 
 class DBDataException(Exception):
     pass
+
+
+class UserAlreadyExistsException(Exception):
+    pass

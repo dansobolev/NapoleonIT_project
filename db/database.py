@@ -4,7 +4,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.orm import sessionmaker, Session
 
-from db.models import BaseModel
+from db.models import BaseModel, DBUser
 
 from db.exceptions import DBIntegrityException, DBDataException
 
@@ -34,6 +34,10 @@ class DBSession:
             raise DBIntegrityException(error)
         except DataError as error:
             raise DBDataException(error)
+
+    # ищем пользователей по login, чтобы не плодить одинаковых
+    def get_user_by_login(self, login: str) -> DBUser:
+        return self._session.query(DBUser).filter(DBUser.login == login).first()
 
     # фиксирование сессии
     def commit_session(self, need_close: bool = False):
