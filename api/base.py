@@ -1,13 +1,6 @@
 from marshmallow import Schema, EXCLUDE, ValidationError
-from sanic.exceptions import SanicException
 
-
-class ApiRequestValidationException(SanicException):
-    status = 400
-
-
-class ApiResponseValidationException(SanicException):
-    status = 500
+from api.exceptions import ApiRequestValidationException, ApiResponseValidationException
 
 
 # создание класс DTO (data transfer object) объекта

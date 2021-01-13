@@ -1,7 +1,12 @@
-# модуль для подключение к базе данных
+# модуль для подключения к базе данных
 
 from sqlalchemy.engine import Engine
+from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.orm import sessionmaker, Session
+
+from db.models import BaseModel
+
+from db.exceptions import DBIntegrityException, DBDataException
 
 
 # класс для реализации функционала сессии
@@ -18,6 +23,29 @@ class DBSession:
     # закрытие сессии
     def close_session(self):
         self._session.close()
+
+    # добавления модели в базу данных
+    def add_model(self, model: BaseModel):
+        try:
+            # экземпляр класса Session имеет встроенный метод add
+            # для добавления объекта в базу данных
+            self._session.add(model)
+        except IntegrityError as error:
+            raise DBIntegrityException(error)
+        except DataError as error:
+            raise DBDataException(error)
+
+    # фиксирование сессии
+    def commit_session(self, need_close: bool = False):
+        try:
+            self._session.commit()
+        except IntegrityError as error:
+            raise DBIntegrityException(error)
+        except DataError as error:
+            raise DBDataException(error)
+
+        if need_close:
+            self.close_session()
 
 
 class DataBase:

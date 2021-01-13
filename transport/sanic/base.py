@@ -34,8 +34,8 @@ class SanicEndpoint:
         # проверка если мы не передали ничего в качестве тела запроса
         if body is None:
             body = {
-                'message': message or HTTPStatus(status).phrase, # текстовое обозначение статуса (200 = OK)
-                'error': error_code or status # если не указан error_code, то возьмем код из status
+                'message': message or HTTPStatus(status).phrase,  # текстовое обозначение статуса (200 = OK)
+                'error': error_code or status,  # если не указан error_code, то возьмем код из status
             }
 
         return json(body=body, status=status)

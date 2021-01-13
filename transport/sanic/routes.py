@@ -4,11 +4,11 @@ from typing import Tuple
 
 from configs.config import ApplicationConfig
 from context import Context
-from transport.sanic.base import SanicEndpoint
-from transport.sanic.endpoints.health import HealthEndpoint
+from transport.sanic import endpoints
 
 
-def get_routes(config: ApplicationConfig, context: Context) -> Tuple['SanicEndpoint']:
+def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
     return (
-        HealthEndpoint(config=config, context=context, uri='/', methods=('GET', 'POST')),
+        endpoints.HealthEndpoint(config=config, context=context, uri='/', methods=('GET', 'POST')),
+        endpoints.CreateUserEndpoint(config=config, context=context, uri='/user', methods=['POST']),
     )
