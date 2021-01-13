@@ -39,20 +39,20 @@
 ### Создание пользователя
 
     /user "POST"
-        Request: {
+        request: {
             "login": str,
             "password": str,
             "first_name": str,
             "last_name": str
         }
-        Response: {}
+        response: {}
 
 ### Получение информации о пользователе
 Доступно только для своего пользователя
 
     /user 'GET'
-        Request: {}
-        Response: {
+        request: {}
+        response: {
             "login": str,
             "first_name": str,
             "last_name": str
@@ -62,29 +62,29 @@
 Доступно только для своего пользователя
 
     /user "PATCH"
-        Request: {
+        request: {
             "password": str?,
             "first_name": str?,
             "last_name": str?
         }
-        Response: {}
+        response: {}
 
 ### Создание сообщения
 Доступно только для авторизированного пользователя
 
     /msg "POST"
-        Request: {
+        request: {
             "message": str,
             "recipient": str
         }
-        Response: {}
+        response: {}
 
 ### Получение сообщений
 Доступно только для авторизированного пользователя
 
     /msg "GET"
-        Request: {}
-        Response: {
+        request: {}
+        response: {
             "messages": list
         }
 
