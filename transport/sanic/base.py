@@ -35,7 +35,7 @@ class SanicEndpoint:
         if body is None:
             body = {
                 'message': message or HTTPStatus(status).phrase,  # текстовое обозначение статуса (200 = OK)
-                'error': error_code or status,  # если не указан error_code, то возьмем код из status
+                'status': error_code or status,  # если не указан error_code, то возьмем код из status
             }
 
         return json(body=body, status=status)
