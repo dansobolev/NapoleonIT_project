@@ -46,7 +46,10 @@
             "first_name": str,
             "last_name": str
         }
-        response: {}
+        response: {
+            "message_status": str,
+            "status": int,
+        }
 
 ### Получение информации о пользователе
 Доступно только для своего пользователя
