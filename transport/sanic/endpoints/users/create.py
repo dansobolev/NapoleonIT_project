@@ -20,7 +20,7 @@ class CreateUserEndpoint(BaseEndpoint):
 
         try:
             # экземпляр базы данных
-            db_user = user_queries.create_user(session, request_model)
+            user_queries.create_user(session, request_model)
             session.commit_session()
         # ошибка уникальность, то есть подразумевается, что такой пользователь
         # уже существует в базе
@@ -29,7 +29,4 @@ class CreateUserEndpoint(BaseEndpoint):
         except (DBIntegrityException, DBDataException) as error:
             return await self.make_response_json(status=500, message=str(error))
 
-        # процесс валидации
-        response_model = ResponseGetUserDto(db_user)
-
-        return await self.make_response_json(body=response_model.dump(), status=201)
+        return await self.make_response_json(status=201)
