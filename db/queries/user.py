@@ -6,11 +6,11 @@ from db.exceptions import UserAlreadyExistsException
 from db.models import DBUser
 
 
-def create_user(session: DBSession, user: RequestCreateUserDto) -> DBUser:
+def create_user(session: DBSession, user: RequestCreateUserDto, hashed_password: bytes) -> DBUser:
     # создание модели DBUser
     new_user = DBUser(
         login=user.login,
-        password=user.password,
+        password=hashed_password,  # записываем в базу хэшированный пароль
         first_name=user.first_name,
         last_name=user.last_name,
     )

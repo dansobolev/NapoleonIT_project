@@ -35,7 +35,7 @@ class DBSession:
         except DataError as error:
             raise DBDataException(error)
 
-    # ищем пользователей по login, чтобы не плодить одинаковых
+    # поиск пользователя по login
     def get_user_by_login(self, login: str) -> DBUser:
         return self._session.query(DBUser).filter(DBUser.login == login).first()
 
