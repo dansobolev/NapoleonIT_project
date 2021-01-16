@@ -12,4 +12,7 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
         endpoints.HealthEndpoint(config=config, context=context, uri='/', methods=('GET', 'POST')),
         endpoints.CreateUserEndpoint(config=config, context=context, uri='/user', methods=['POST']),
         endpoints.AuthUserEndpoint(config=config, context=context, uri='/user/auth', methods=['POST']),
+        endpoints.GetUserByLoginEndpoint(
+            config=config, context=context, uri='/user/get_user/<user_login:string>', methods=['GET']
+        ),
     )
