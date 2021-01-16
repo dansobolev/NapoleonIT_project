@@ -1,5 +1,3 @@
-
-
 class DBIntegrityException(Exception):
     pass
 
@@ -8,5 +6,5 @@ class DBDataException(Exception):
     pass
 
 
-class UserAlreadyExistsException(Exception):
+class DBUserAlreadyExistsException(Exception):
     pass

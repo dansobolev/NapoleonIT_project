@@ -5,11 +5,13 @@ from api.request import RequestCreateUserDto
 
 from db.database import DBSession
 from db.queries import user as user_queries
-from db.exceptions import DBIntegrityException, DBDataException, UserAlreadyExistsException
+from db.exceptions import DBIntegrityException, DBDataException, DBUserAlreadyExistsException
 
 from transport.sanic.endpoints import BaseEndpoint
+from transport.sanic.exceptions import SanicPasswordHashException, SanicDBException
 
 from utils.password import generate_hash
+from utils.password import GeneratePasswordHashException
 
 
 # Endpoint для обработки запроса на создание пользователя
@@ -20,17 +22,20 @@ class CreateUserEndpoint(BaseEndpoint):
         # DTO объект
         request_model = RequestCreateUserDto(body)
 
-        hashed_password = generate_hash(request_model.password)
+        try:
+            hashed_password = generate_hash(request_model.password)
+        except GeneratePasswordHashException as error:
+            raise SanicPasswordHashException(str(error))
 
         try:
             # экземпляр базы данных
             user_queries.create_user(session, request_model, hashed_password)
             session.commit_session()
-        # ошибка уникальность, то есть подразумевается, что такой пользователь
+        # ошибка уникальности, то есть подразумевается, что такой пользователь
         # уже существует в базе
-        except UserAlreadyExistsException:
+        except DBUserAlreadyExistsException:
             return await self.make_response_json(status=409, message='User already exists')
         except (DBIntegrityException, DBDataException) as error:
-            return await self.make_response_json(status=500, message=str(error))
+            raise SanicDBException(str(error))
 
         return await self.make_response_json(status=201)

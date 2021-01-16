@@ -23,12 +23,3 @@ def check_hash(password_: str, hash_: bytes) -> bool:
         )
     except (TypeError, ValueError) as error:
         raise CheckPasswordHashException(str(error))
-
-
-if __name__ == '__main__':
-    password = 'Dantous201'
-    password1 = 'qwerty'
-    hsh = generate_hash(password)
-    hsh1 = generate_hash(password1)
-
-    print(check_hash(password, hsh1))

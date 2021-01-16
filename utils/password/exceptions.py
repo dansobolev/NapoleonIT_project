@@ -1,9 +1,6 @@
-from sanic.exceptions import SanicException
-
-
-# основной класс с ошибкой
-class PasswordHashException(SanicException):
-    status_code = 500
+# основной класс для обработки исключений паролей
+class PasswordHashException(Exception):
+    pass
 
 
 class GeneratePasswordHashException(PasswordHashException):

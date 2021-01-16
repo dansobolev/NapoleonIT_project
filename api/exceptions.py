@@ -1,13 +1,9 @@
 from sanic.exceptions import SanicException
 
 
-class ValidationException(SanicException):
+class ApiRequestValidationException(SanicException):
     status_code = 400
 
 
-class ApiRequestValidationException(ValidationException):
-    pass
-
-
-class ApiResponseValidationException(ValidationException):
+class ApiResponseValidationException(SanicException):
     status_code = 500
