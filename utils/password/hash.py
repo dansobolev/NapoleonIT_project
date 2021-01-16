@@ -14,12 +14,15 @@ def generate_hash(password_: str) -> bytes:
         raise GeneratePasswordHashException(str(error))
 
 
-def check_hash(password_: str, hash_: bytes) -> bool:
+def check_hash(password_: str, hash_: bytes) -> None:
     try:
         # проверяем совпадает ли хэш пароля с тем, который у нас в базе
-        return bcrypt.checkpw(
+        result = bcrypt.checkpw(
             password=password_.encode(),
             hashed_password=hash_,
         )
     except (TypeError, ValueError) as error:
         raise CheckPasswordHashException(str(error))
+
+    if not result:
+        raise CheckPasswordHashException

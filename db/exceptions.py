@@ -8,3 +8,7 @@ class DBDataException(Exception):
 
 class DBUserAlreadyExistsException(Exception):
     pass
+
+
+class DBUserNotFoundException(Exception):
+    pass

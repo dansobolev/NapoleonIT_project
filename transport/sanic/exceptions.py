@@ -26,3 +26,8 @@ class SanicPasswordHashException(SanicException):
 # исключение, связанное с БД
 class SanicDBException(SanicException):
     status_code = 500
+
+
+# user not found
+class SanicUserNotFoundException(SanicException):
+    status_code = 404

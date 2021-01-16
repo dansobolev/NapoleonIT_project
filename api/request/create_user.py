@@ -1,8 +1,6 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields
 
 from api.base import RequestDto
-
-from utils.password.hash import generate_hash
 
 
 class RequestCreateUserDtoSchema(Schema):

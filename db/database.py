@@ -39,6 +39,10 @@ class DBSession:
     def get_user_by_login(self, login: str) -> DBUser:
         return self._session.query(DBUser).filter(DBUser.login == login).first()
 
+    # поиск пользователя по id
+    def get_user_by_id(self, id_: int) -> DBUser:
+        return self._session.query(DBUser).filter(DBUser.id == id_).first()
+
     # фиксирование сессии
     def commit_session(self, need_close: bool = False):
         try:
