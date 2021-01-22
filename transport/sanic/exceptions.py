@@ -31,3 +31,8 @@ class SanicDBException(SanicException):
 # user not found
 class SanicUserNotFoundException(SanicException):
     status_code = 404
+
+
+# не авторизированный пользователь
+class SanicAuthException(SanicException):
+    status_code = 401

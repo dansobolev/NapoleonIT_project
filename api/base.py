@@ -27,7 +27,17 @@ class RequestDto:
 class ResponseDto:
     __schema__: Schema
 
-    def __init__(self, obj: object):
+    def __init__(self, obj, many: bool = False):
+
+        properties = [self.parse_obj(o) for o in obj] if many else self.parse_obj(obj)
+
+        try:
+            self._data = self.__schema__(unknown=EXCLUDE, many=many).load(properties)
+        except ValidationError as error:
+            raise ApiResponseValidationException(error.messages)
+
+    @staticmethod
+    def parse_obj(obj: object):
         properties = {}
 
         # проходимся по атрибутам объекта и ищем те атрибуты,
@@ -40,10 +50,7 @@ class ResponseDto:
                 if not callable(attr):
                     properties[prop] = attr
 
-        try:
-            self._data = self.__schema__(unknown=EXCLUDE).load(properties)
-        except ValidationError as error:
-            raise ApiResponseValidationException(error.messages)
+        return properties
 
     def dump(self) -> dict:
         return self._data

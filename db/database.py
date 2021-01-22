@@ -1,4 +1,5 @@
 # модуль для подключения к базе данных
+from typing import List
 
 from sqlalchemy.engine import Engine
 from sqlalchemy.exc import IntegrityError, DataError
@@ -37,11 +38,15 @@ class DBSession:
 
     # поиск пользователя по login
     def get_user_by_login(self, login: str) -> DBUser:
-        return self._session.query(DBUser).filter(DBUser.login == login).first()
+        return self._session.query(DBUser).filter(DBUser.login == login and DBUser.is_deleted == 0).first()
 
     # поиск пользователя по id
     def get_user_by_id(self, id_: int) -> DBUser:
-        return self._session.query(DBUser).filter(DBUser.id == id_).first()
+        return self._session.query(DBUser).filter(DBUser.id == id_ and DBUser.is_deleted == 0).first()
+
+    # получение всех пользователей
+    def get_all_users(self) -> List['DBUser']:
+        return self._session.query(DBUser).filter(DBUser.is_deleted == 0).all()
 
     # фиксирование сессии
     def commit_session(self, need_close: bool = False):

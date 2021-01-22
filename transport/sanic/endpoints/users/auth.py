@@ -1,6 +1,7 @@
 from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
+from api.response.auth_user import ResponseAuthUserDto, AuthResponseObject
 from db.database import DBSession
 
 from transport.sanic.endpoints import BaseEndpoint
@@ -38,8 +39,9 @@ class AuthUserEndpoint(BaseEndpoint):
             'id': db_user.id,
         }
 
-        response_body = {
-            'Authorization': create_token(payload)
-        }
+        token = create_token(payload)
+        response = AuthResponseObject(token)
 
-        return await self.make_response_json(body=response_body, status=200)
+        response_model = ResponseAuthUserDto(response)
+
+        return await self.make_response_json(body=response_model.dump(), status=200)

@@ -8,6 +8,8 @@ from sanic.response import BaseHTTPResponse, json
 
 from configs.config import ApplicationConfig
 from context import Context
+from transport.sanic.exceptions import SanicAuthException
+from utils.auth import read_token, ReadTokenException
 
 
 class SanicEndpoint:
@@ -16,11 +18,21 @@ class SanicEndpoint:
     async def __call__(self, *args, **kwargs) -> BaseHTTPResponse:
         return await self.handler(*args, **kwargs)
 
-    def __init__(self, config: ApplicationConfig, context: Context, uri: str, methods: Iterable, *args, **kwargs):
+    def __init__(
+            self,
+            config: ApplicationConfig,
+            context: Context,
+            uri: str,
+            methods: Iterable,
+            # флаг для определения нужна ли для метода авторизация
+            auth_required: bool = False,
+            *args, **kwargs
+    ):
         self.config = config
         self.uri = uri
         self.methods = methods
         self.context = context
+        self.auth_required = auth_required
         # для того, чтобы при наследовании этого класса классом потомком
         # получать название класса потомка, а не родителя
         self.__name__ = self.__class__.__name__
@@ -59,9 +71,28 @@ class SanicEndpoint:
 
         return headers
 
+    # если в реквесте есть токен, то получает его и добавляет в body данные о том кто авторизован
+    @staticmethod
+    def import_body_auth(request: Request) -> dict:
+        # получаем токен из заголовка запроса
+        token = request.headers.get('Authorization')
+        try:
+            return read_token(token)
+        except ReadTokenException as error:
+            raise SanicAuthException(str(error))
+
     # обработка запроса
     async def handler(self, request: Request, *args, **kwargs) -> BaseHTTPResponse:
         body = {}
+
+        # TODO протестить на безопасность
+        # проверка нужна ли аутентификация
+        # если нужна, то вызываем предыдущий метод и проверяем токен на валидность
+        if self.auth_required:
+            try:
+                body.update(self.import_body_auth(request))
+            except SanicAuthException as error:
+                return await self.make_response_json(status=error.status_code, message=str(error))
 
         # обновляем словари и записываем туда данные с помощью предыдущих методов
         body.update(self.import_body_json(request))
