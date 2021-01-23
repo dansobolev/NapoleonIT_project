@@ -15,10 +15,7 @@ class AllUsersEndpoint(BaseEndpoint):
     async def method_get(
             self, request: Request, body: dict, session: DBSession, *args, **kwargs
     ) -> BaseHTTPResponse:
-
-        # проверяем, что пользователь не удален из базы (is_deleted != 1)
-        if user_queries.get_user(session=session, user_id=body['id']).is_deleted:
-            raise SanicAuthException('Not authenticated')
+        print('printed all users')
 
         db_user = user_queries.get_users(session)
 
