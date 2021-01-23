@@ -9,7 +9,7 @@ from db.exceptions import DBUserNotFoundException, DBIntegrityException, DBDataE
 from db.queries import user as user_queries
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicUserNotFoundException, SanicDBException
+from transport.sanic.exceptions import SanicUserNotFoundException, SanicDBException, SanicAuthException
 
 
 class UserEndpoint(BaseEndpoint):
@@ -17,6 +17,10 @@ class UserEndpoint(BaseEndpoint):
     async def method_patch(
             self, request: Request, body: dict, session: DBSession, user_id: int,  *args, **kwargs
     ) -> BaseHTTPResponse:
+
+        # проверяем, что пользователь не удален из базы (is_deleted != 1)
+        if user_queries.get_user(session=session, user_id=body['id']).is_deleted:
+            raise SanicAuthException('Not authenticated')
 
         request_model = RequestPatchUserDto(body)
 

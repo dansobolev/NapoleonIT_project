@@ -7,6 +7,7 @@ from db.database import DBSession
 from db.queries import user as user_queries
 
 from transport.sanic.endpoints import BaseEndpoint
+from transport.sanic.exceptions import SanicAuthException
 
 
 class AllUsersEndpoint(BaseEndpoint):
@@ -14,6 +15,10 @@ class AllUsersEndpoint(BaseEndpoint):
     async def method_get(
             self, request: Request, body: dict, session: DBSession, *args, **kwargs
     ) -> BaseHTTPResponse:
+
+        # проверяем, что пользователь не удален из базы (is_deleted != 1)
+        if user_queries.get_user(session=session, user_id=body['id']).is_deleted:
+            raise SanicAuthException('Not authenticated')
 
         db_user = user_queries.get_users(session)
 
