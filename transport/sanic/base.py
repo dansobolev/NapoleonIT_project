@@ -15,8 +15,20 @@ from utils.auth import read_token, ReadTokenException
 class SanicEndpoint:
 
     # чтобы сделать будущим экземпляр этого класса вызываемым
-    async def __call__(self, *args, **kwargs) -> BaseHTTPResponse:
-        return await self.handler(*args, **kwargs)
+    async def __call__(self, request: Request, *args, **kwargs) -> BaseHTTPResponse:
+        # проверка нужна ли аутентификация
+        # если нужна, то вызываем предыдущий метод и проверяем токен на валидность
+        if self.auth_required:
+            try:
+                token = {
+                    'token': self.import_body_auth(request)
+                }
+            except SanicAuthException as error:
+                return await self.make_response_json(status=error.status_code, message=str(error))
+            else:
+                kwargs.update(token)
+
+        return await self.handler(request, *args, **kwargs)
 
     def __init__(
             self,
@@ -85,14 +97,13 @@ class SanicEndpoint:
     async def handler(self, request: Request, *args, **kwargs) -> BaseHTTPResponse:
         body = {}
 
-        # TODO протестить на безопасность
         # проверка нужна ли аутентификация
         # если нужна, то вызываем предыдущий метод и проверяем токен на валидность
-        if self.auth_required:
-            try:
-                body.update(self.import_body_auth(request))
-            except SanicAuthException as error:
-                return await self.make_response_json(status=error.status_code, message=str(error))
+        # if self.auth_required:
+        #    try:
+        #        body.update(self.import_body_auth(request))
+        #    except SanicAuthException as error:
+        #        return await self.make_response_json(status=error.status_code, message=str(error))
 
         # обновляем словари и записываем туда данные с помощью предыдущих методов
         body.update(self.import_body_json(request))
