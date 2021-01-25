@@ -15,7 +15,6 @@ class AllUsersEndpoint(BaseEndpoint):
     async def method_get(
             self, request: Request, body: dict, session: DBSession, *args, **kwargs
     ) -> BaseHTTPResponse:
-        print('printed all users')
 
         db_user = user_queries.get_users(session)
 

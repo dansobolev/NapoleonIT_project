@@ -11,7 +11,7 @@ class SQLiteConfig:
 
 
 class PostgresConfig:
-    name = os.getenv('POSTGRES_NAME', 'mainapp')
+    name = os.getenv('POSTGRES_NAME', 'postgres')
     user = os.getenv('POSTGRES_USER', 'admin')
     password = os.getenv('POSTGRES_PASSWORD', 'admin')
     host = os.getenv('POSTGRES_HOST', 'main-db')

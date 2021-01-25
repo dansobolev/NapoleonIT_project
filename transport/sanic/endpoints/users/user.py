@@ -20,7 +20,6 @@ class UserEndpoint(BaseEndpoint):
 
         # проверяем, что пользователь посылает запрос от своего имени
         # и что он не удален из базы (is_deleted != 1)
-        print(token.get('id'), user_id, flush=True)
         if token.get('id') != user_id:
             return await self.make_response_json(status=403)
 
