@@ -27,4 +27,13 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
         endpoints.AllUsersEndpoint(
             config=config, context=context, uri='/user/all', methods=['GET'], auth_required=True
         ),
+
+        # messages
+        endpoints.CreateMessage(
+            config=config, context=context, uri='/message', methods=['POST'], auth_required=True,
+        ),
+        endpoints.GetAllMessagesEndpoint(
+            config=config, context=context, uri='/message', methods=['GET'], auth_required=True,
+        ),
+
     )

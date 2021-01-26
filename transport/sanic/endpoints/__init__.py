@@ -5,3 +5,6 @@ from .users.get_user_by_login import GetUserByLoginEndpoint
 from .users.user import UserEndpoint
 from .users.get_all import AllUsersEndpoint
 from .health import HealthEndpoint
+
+from .messages.create import CreateMessage
+from .messages.get_all import GetAllMessagesEndpoint

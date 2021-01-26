@@ -5,7 +5,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.exc import IntegrityError, DataError
 from sqlalchemy.orm import sessionmaker, Session
 
-from db.models import BaseModel, DBUser
+from db.models import BaseModel, DBUser, DBMessage
 
 from db.exceptions import DBIntegrityException, DBDataException
 
@@ -47,6 +47,10 @@ class DBSession:
     # получение всех пользователей
     def get_all_users(self) -> List['DBUser']:
         return self._session.query(DBUser).filter(DBUser.is_deleted == 0).all()
+
+    # получение всех сообщений конкретного пользователя
+    def get_all_messages(self, user_id: int) -> List['DBMessage']:
+        return self._session.query(DBMessage).filter(DBMessage.recipient_id == user_id).all()
 
     # фиксирование сессии
     def commit_session(self, need_close: bool = False):
