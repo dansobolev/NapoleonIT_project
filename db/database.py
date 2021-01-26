@@ -47,7 +47,14 @@ class DBSession:
 
     # получение всех пользователей
     def get_all_users(self) -> List['DBUser']:
-        return self._session.query(DBUser).filter(DBUser.is_deleted is False).all()
+        # return self._session.query(DBUser).filter(DBUser.is_deleted is False).all()
+        return self._session.query(DBUser).all()
+
+    # TODO выводить при создании пользователя его ID
+    # TODO разобраться почему не выводит всех пользователей (сейчас выводится пустой список)
+
+    # TODO попробовать не отфильтровывать по флагу is_deleted, а вывести всех пользователей
+    # TODO и посмотреть будет ли так работать
 
     # получение всех сообщений конкретного пользователя
     def get_all_messages(self, user_id: int) -> List['DBMessage']:
