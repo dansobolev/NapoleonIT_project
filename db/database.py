@@ -38,15 +38,16 @@ class DBSession:
 
     # поиск пользователя по login
     def get_user_by_login(self, login: str) -> DBUser:
-        return self._session.query(DBUser).filter(DBUser.login == login and DBUser.is_deleted == 0).first()
+        # TODO в postgres надо сравнивать DBUser.is_deleted с True/False, а не с 0/1
+        return self._session.query(DBUser).filter(DBUser.login == login and DBUser.is_deleted is False).first()
 
     # поиск пользователя по id
     def get_user_by_id(self, id_: int) -> DBUser:
-        return self._session.query(DBUser).filter(DBUser.id == id_ and DBUser.is_deleted == 0).first()
+        return self._session.query(DBUser).filter(DBUser.id == id_ and DBUser.is_deleted is False).first()
 
     # получение всех пользователей
     def get_all_users(self) -> List['DBUser']:
-        return self._session.query(DBUser).filter(DBUser.is_deleted == 0).all()
+        return self._session.query(DBUser).filter(DBUser.is_deleted is False).all()
 
     # получение всех сообщений конкретного пользователя
     def get_all_messages(self, user_id: int) -> List['DBMessage']:
