@@ -2,6 +2,7 @@ from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
 from api.request import RequestCreateUserDto
+from api.response import ResponseGetUserDto
 
 from db.database import DBSession
 from db.queries import user as user_queries
@@ -29,7 +30,7 @@ class CreateUserEndpoint(BaseEndpoint):
 
         try:
             # экземпляр базы данных
-            user_queries.create_user(session, request_model, hashed_password)
+            db_user = user_queries.create_user(session, request_model, hashed_password)
             session.commit_session()
         # ошибка уникальности, то есть подразумевается, что такой пользователь
         # уже существует в базе
@@ -38,4 +39,9 @@ class CreateUserEndpoint(BaseEndpoint):
         except (DBIntegrityException, DBDataException) as error:
             raise SanicDBException(str(error))
 
-        return await self.make_response_json(status=201)
+        response_model = ResponseGetUserDto(db_user)
+
+        return await self.make_response_json(
+            body=response_model.dump(),
+            status=201
+        )
