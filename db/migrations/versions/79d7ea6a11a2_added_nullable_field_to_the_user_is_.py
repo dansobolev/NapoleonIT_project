@@ -1,8 +1,8 @@
-"""Create tables Users and Messages
+"""added nullable field to the user is_deleted
 
-Revision ID: 2c5969c71a97
+Revision ID: 79d7ea6a11a2
 Revises: 
-Create Date: 2021-01-26 20:26:33.329889
+Create Date: 2021-01-27 02:52:27.364637
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2c5969c71a97'
+revision = '79d7ea6a11a2'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -36,7 +36,7 @@ def upgrade():
     sa.Column('password', sa.LargeBinary(), nullable=False),
     sa.Column('first_name', sa.String(length=50), nullable=True),
     sa.Column('last_name', sa.String(length=50), nullable=True),
-    sa.Column('is_deleted', sa.BOOLEAN(), nullable=True),
+    sa.Column('is_deleted', sa.BOOLEAN(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('id'),
     sa.UniqueConstraint('login')

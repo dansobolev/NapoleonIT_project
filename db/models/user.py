@@ -24,4 +24,5 @@ class DBUser(BaseModel):
     is_deleted = Column(
         BOOLEAN(),
         default=False,
+        nullable=False,
     )
