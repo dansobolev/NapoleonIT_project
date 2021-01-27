@@ -39,21 +39,17 @@ class DBSession:
     # поиск пользователя по login
     def get_user_by_login(self, login: str) -> DBUser:
         # TODO в postgres надо сравнивать DBUser.is_deleted с True/False, а не с 0/1
-        return self._session.query(DBUser).filter(DBUser.login == login and DBUser.is_deleted is False).first()
+        return self._session.query(DBUser).filter(DBUser.login == login and DBUser.is_deleted == False).first()
 
     # поиск пользователя по id
     def get_user_by_id(self, id_: int) -> DBUser:
-        return self._session.query(DBUser).filter(DBUser.id == id_ and DBUser.is_deleted is False).first()
+        return self._session.query(DBUser).filter(DBUser.id == id_ and DBUser.is_deleted == False).first()
 
     # получение всех пользователей
     def get_all_users(self) -> List['DBUser']:
+        # хоть PyCharm ругается, что надо бы заменить == на is, но тогда filter сломается
+        # и не будет ничего выдавать. В данном случае работает только сравнение.
         return self._session.query(DBUser).filter(DBUser.is_deleted == False).all()
-
-    # TODO выводить при создании пользователя его ID
-    # TODO разобраться почему не выводит всех пользователей (сейчас выводится пустой список)
-
-    # TODO попробовать не отфильтровывать по флагу is_deleted, а вывести всех пользователей
-    # TODO и посмотреть будет ли так работать
 
     # получение всех сообщений конкретного пользователя
     def get_all_messages(self, user_id: int) -> List['DBMessage']:
