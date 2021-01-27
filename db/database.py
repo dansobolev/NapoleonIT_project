@@ -47,7 +47,7 @@ class DBSession:
 
     # получение всех пользователей
     def get_all_users(self) -> List['DBUser']:
-        return self._session.query(DBUser).filter(DBUser.is_deleted is False).all()
+        return self._session.query(DBUser).filter(DBUser.is_deleted is True).all()
 
     # TODO выводить при создании пользователя его ID
     # TODO разобраться почему не выводит всех пользователей (сейчас выводится пустой список)
