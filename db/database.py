@@ -38,18 +38,15 @@ class DBSession:
 
     # поиск пользователя по login
     def get_user_by_login(self, login: str) -> DBUser:
-        # TODO в postgres надо сравнивать DBUser.is_deleted с True/False, а не с 0/1
-        return self._session.query(DBUser).filter(DBUser.login == login and DBUser.is_deleted == False).first()
+        return self._session.query(DBUser).filter(DBUser.login == login and DBUser.is_deleted.isnot(True)).first()
 
     # поиск пользователя по id
     def get_user_by_id(self, id_: int) -> DBUser:
-        return self._session.query(DBUser).filter(DBUser.id == id_ and DBUser.is_deleted == False).first()
+        return self._session.query(DBUser).filter(DBUser.id == id_ and DBUser.is_deleted.isnot(True)).first()
 
     # получение всех пользователей
     def get_all_users(self) -> List['DBUser']:
-        # хоть PyCharm ругается, что надо бы заменить == на is, но тогда filter сломается
-        # и не будет ничего выдавать. В данном случае работает только сравнение.
-        return self._session.query(DBUser).filter(DBUser.is_deleted == False).all()
+        return self._session.query(DBUser).filter(DBUser.is_deleted.isnot(True)).all()
 
     # получение всех сообщений конкретного пользователя
     def get_all_messages(self, user_id: int) -> List['DBMessage']:
