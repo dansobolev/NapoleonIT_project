@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, BOOLEAN, LargeBinary
+from sqlalchemy import Column, String, Boolean, LargeBinary
 
 from db.models import BaseModel
 
@@ -22,7 +22,7 @@ class DBUser(BaseModel):
     last_name = Column(String(50))
 
     is_deleted = Column(
-        BOOLEAN(),
+        Boolean,
         default=False,
         nullable=False,
     )
