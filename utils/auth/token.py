@@ -11,10 +11,12 @@ from utils.auth.exceptions import ReadTokenException
 
 
 # функция для генерации токена
-def create_token(payload: dict) -> str:
+def create_token(data: dict, lifetime: int = 1) -> str:
     # ключ будет действителен 1 час
-    payload['exp'] = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-
+    payload = {
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=lifetime)
+    }
+    payload.update(data)
     return jwt.encode(payload, UtilsConfig.secret_token, algorithm='HS256')
 
 
