@@ -2,15 +2,14 @@ from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
 from api.request import RequestPatchUserPasswordDto
-from api.response import ResponseGetUserDto
 
 from db.database import DBSession
-from db.exceptions import DBUserNotFoundException, DBIntegrityException, DBDataException, DBUserDeletedException
+from db.exceptions import DBIntegrityException, DBDataException, DBUserDeletedException
 from db.queries import user as user_queries
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicUserNotFoundException, SanicDBException, SanicUserDeletedException, \
-    SanicPasswordHashException
+from transport.sanic.exceptions import SanicDBException, SanicUserDeletedException, SanicPasswordHashException
+
 from utils.password import generate_hash, GeneratePasswordHashException
 
 
@@ -31,10 +30,14 @@ class ChangePasswordEndpoint(BaseEndpoint):
         except GeneratePasswordHashException as error:
             raise SanicPasswordHashException(str(error))
 
+        # TODO проверить можно ли поменять пароль у удаленного пользователя
+        # TODO если можно то обязательно добавить проверку
+
+        # проверка, что пользовательн не удален
         try:
             user_queries.change_password(session, hashed_password, user_id)
-        except DBUserNotFoundException:
-            raise SanicUserNotFoundException('User not found')
+        except DBUserDeletedException:
+            raise SanicUserDeletedException('User deleted')
 
         try:
             session.commit_session()

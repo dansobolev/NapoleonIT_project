@@ -29,7 +29,12 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
             config=config, context=context, uri='/user/all', methods=['GET'], auth_required=True
         ),
         endpoints.ChangePasswordEndpoint(
-            config=config, context=context, uri='/user/change_password/<user_id:int>', methods=['PATCH'], auth_required=True,
+            config=config, context=context, uri='/user/change_password/<user_id:int>', methods=['PATCH'],
+            auth_required=True,
+        ),
+        endpoints.ChangeLoginEndpoint(
+            config=config, context=context, uri='/user/change_login/<user_id:int>', methods=['PATCH'],
+            auth_required=True,
         ),
 
         # message

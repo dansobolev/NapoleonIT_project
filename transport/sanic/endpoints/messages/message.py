@@ -63,6 +63,9 @@ class MessageEndpoint(BaseEndpoint):
         if token['id'] != message_queries.get_message(session, msg_id).sender_id:
             return await self.make_response_json(status=403)
 
+        # TODO добавить флаг, чтобы пользователь мог выбирать удалить сообщение только у него в диалоге,
+        # TODO или и у него и у его собеседника
+
         try:
             # TODO протестировать что верно выдает ошибку
             message_queries.delete_message(session, msg_id)

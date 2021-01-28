@@ -76,10 +76,27 @@ def change_password(session: DBSession, hashed_password: bytes, user_id: int) ->
 
     db_user = session.get_user_by_id(user_id)
 
-    if db_user is None:
-        raise DBUserNotFoundException
+    if db_user.is_deleted:
+        raise DBUserDeletedException
 
     db_user.password = hashed_password
+
+    return db_user
+
+
+def change_login(session: DBSession, new_login: str, user_id: int) -> DBUser:
+    db_user_same_login = session.get_user_by_login(new_login)
+
+    if db_user_same_login is not None:
+        raise DBUserAlreadyExistsException
+
+    db_user = session.get_user_by_id(user_id)
+
+    if db_user.is_deleted:
+        raise DBUserDeletedException
+
+    # если исключение не зарейзилось, значит пользователь с таким логином отсутствует
+    db_user.login = new_login
 
     return db_user
 
