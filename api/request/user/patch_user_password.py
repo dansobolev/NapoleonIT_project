@@ -1,4 +1,4 @@
-# редактирование сообщений
+# изменение пароля
 
 from marshmallow import Schema, fields, post_load
 
