@@ -9,6 +9,7 @@ from transport.sanic import endpoints
 
 def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
     return (
+        # user
         endpoints.HealthEndpoint(
             config=config, context=context, uri='/', methods=('GET', 'POST')
         ),
@@ -27,13 +28,21 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
         endpoints.AllUsersEndpoint(
             config=config, context=context, uri='/user/all', methods=['GET'], auth_required=True
         ),
+        endpoints.ChangePasswordEndpoint(
+            config=config, context=context, uri='/user/change_password/<user_id:int>', methods=['PATCH'], auth_required=True,
+        ),
 
-        # messages
+        # message
         endpoints.CreateMessage(
             config=config, context=context, uri='/message', methods=['POST'], auth_required=True,
         ),
         endpoints.GetAllMessagesEndpoint(
             config=config, context=context, uri='/message', methods=['GET'], auth_required=True,
         ),
-
+        endpoints.MessageEndpoint(
+            config=config, context=context, uri='/message/<msg_id:int>', methods=['PATCH', 'DELETE'], auth_required=True
+        ),
+        endpoints.ReadMessage(
+            config=config, context=context, uri='/message/<msg_id:int>', methods=['GET'], auth_required=True
+        ),
     )

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, Boolean
 
 from db.models import BaseModel
 
@@ -19,4 +19,16 @@ class DBMessage(BaseModel):
     recipient_id = Column(
         Integer,
         nullable=False
+    )
+
+    is_deleted = Column(
+        Boolean,
+        default=False,
+        nullable=False,
+    )
+
+    is_read = Column(
+        Boolean,
+        default=False,
+        nullable=False,
     )

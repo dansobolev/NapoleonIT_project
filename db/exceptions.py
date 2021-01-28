@@ -12,3 +12,15 @@ class DBUserAlreadyExistsException(Exception):
 
 class DBUserNotFoundException(Exception):
     pass
+
+
+class DBUserDeletedException(Exception):
+    pass
+
+
+class DBMessageNotFoundException(Exception):
+    pass
+
+
+class DBMessageDeletedException(Exception):
+    pass

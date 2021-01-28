@@ -18,25 +18,26 @@
 
 ## Использование
 Перед запуском приложения необходимо в корневой директории создать файл `.env` и поместить туда следующие элементы:
+    
+    POSTGRES_DB = <название_для_DB>
+    POSTGRES_USER = <имя_пользователя>
+    POSTGRES_PASSWORD = <пароль>
+    POSTGRES_HOST = <имя_хоста>
+    POSTGRES_PORT = <порт>
+    host = 0.0.0.0
 
-    host = <адрес приложения>
-    port = <порт>
-    workers = <количество воркеров>
-    debug = <debug status (true/false)>
-    dbname = <имя базы данных>
-    secret_token = <secret token>
+    secret_token = <your_super_secret_token>
 
-Поле `secret_token` является обязательным для заполнения. Все остальные поля можно не создавать. В таком случае они будут
+Поле `secret_token` является **обязательным** для заполнения. Все остальные поля можно не создавать. В таком случае они будут
 заданы по умолчанию.
 
-Для начала требуется создать и активировать виртуальное окружение:
+Для начала работы необходимо склонировать репозиторий к себе на компьютер:
 
-    python -m venv venv
-    venv\Scripts\activate.bat
+    git clone https://github.com/dansobolev/NapoleonIT_project
 
-Далее требуется загрузить все необходимые зависимости с помощью следующей команды:
-
-    pip install -r requirements.txt
+Далее, запускаем приложение и БД в контейнерах при помощи docker-compose:
+    
+    docker-compose up
 
 ## Описание API
 ### Создание пользователя
@@ -49,49 +50,138 @@
             "last_name": str
         }
         response: {
-            "message_status": str,
-            "status": int,
+            "id": int,
+            "login": str,
+            "first_name": str,
+            "last_name": str,
+            "created_at": str,
+            "updated_at": str   
+        }
+
+
+### Аутентификация пользователя
+    /auth "POST"
+        request: {
+            "login": str,
+            "password": str
+        }
+        response: {
+            "Authorization": str
         }
 
 ### Получение информации о пользователе
 Доступно только для своего пользователя
 
-    /user 'GET'
+    /user "GET"
         request: {}
         response: {
+            "id": str,
             "login": str,
             "first_name": str,
-            "last_name": str
+            "last_name": str,
+            "created_at": str,
+            "updated_at": str   
         }
 
 ### Изменение информации о пользователе
 Доступно только для своего пользователя
 
-    /user "PATCH"
+    /user/<user_id:int> "PATCH"
         request: {
-            "password": str?,
             "first_name": str?,
             "last_name": str?
         }
-        response: {}
+        response: {
+            "id": str,
+            "login": str,
+            "first_name": str,
+            "last_name": str,
+            "created_at": str,
+            "updated_at": str 
+        }
+
+### Удаление пользователя
+Доступно только для своего пользователя
+
+    /user/<user_id:int> "DELETE"
+        Request: {}
+        Response: {}
+
 
 ### Создание сообщения
 Доступно только для авторизированного пользователя
 
-    /msg "POST"
+    /message "POST"
         request: {
             "message": str,
-            "recipient": str
+            "recipient_id": int
         }
-        response: {}
+        response: {
+            "id": int,
+            "sender_id": int,
+            "recipient_id": int,
+            "created_at": str,
+            "updated_at": str,
+            "message": str,
+            "is_read": boolean
+        }
 
 ### Получение сообщений
 Доступно только для авторизированного пользователя
 
-    /msg "GET"
+    /message "GET"
         request: {}
         response: {
-            "messages": list
+            "messages": [
+                        {
+                            "id": int,
+                            "sender_id": int,
+                            "recipient_id": int,
+                            "created_at": str,
+                            "updated_at": str,
+                            "message": str,
+                            "is_read": boolean
+                    },
+                    {...},
+                ]
+        }
+
+### Редактирование сообщений
+Доступно только для своих сообщений
+    
+    /message/<message_id:int> "PATCH"
+        request: {
+            "message": str
+        }
+        response: {
+            "id": int,
+            "sender_id": int,
+            "recipient_id": int,
+            "created_at": str,
+            "updated_at": str,
+            "message": str
+        }
+
+### Удаление сообщений
+Доступно только для своих сообщений
+    
+    /message/<message_id:int> "DELETE"
+        request: {}
+        response: {}
+
+### Чтение сообщений
+Доступно только для своих сообщений
+    
+    /message/<message_id:int> "GET"
+        request: {}
+        response: {
+            "id": int,
+            "sender_id": int,
+            "recipient_id": int,
+            "created_at": str,
+            "updated_at": str,
+            "message": str,
+            "is_read": boolean
         }
 
 ## Дополнительные методы
@@ -102,7 +192,7 @@
             "user_login": str
         }
         response: {
-            "created_at": datetime,
+            "created_at": str,
             "total_messages": int
         }
 

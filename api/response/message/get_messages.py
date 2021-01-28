@@ -13,6 +13,8 @@ class ResponseGetMessageDtoSchema(Schema):
     updated_at = fields.DateTime(required=True)
     message = fields.Str(required=True, allow_none=False)
 
+    # TODO добавить поле is_read и выводить его
+
     # оба декораторы нужна, чтобы преобразовывать объект из datetime.datetime в str
     # до и после валидации
     @pre_load

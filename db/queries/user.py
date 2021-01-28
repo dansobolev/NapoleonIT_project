@@ -3,7 +3,7 @@ from typing import List
 
 from api.request import RequestCreateUserDto, RequestPatchUserDto
 from db.database import DBSession
-from db.exceptions import DBUserAlreadyExistsException, DBUserNotFoundException
+from db.exceptions import DBUserAlreadyExistsException, DBUserNotFoundException, DBUserDeletedException
 from db.models import DBUser
 
 
@@ -39,13 +39,28 @@ def get_user(session: DBSession, login: str = None, user_id: int = None) -> DBUs
 
     if db_user is None:
         raise DBUserNotFoundException
+
+    if db_user.is_deleted is True:
+        raise DBUserDeletedException
+
     return db_user
 
 
 # изменение данных пользователя
-def patch_user(session: DBSession, user: RequestPatchUserDto, user_id: int) -> DBUser:
+def patch_user(
+        session: DBSession, user: RequestPatchUserDto, user_id: int = None
+) -> DBUser:
 
-    db_user = session.get_user_by_id(user_id)
+    db_user = None
+
+    if user_id is not None:
+        db_user = session.get_user_by_id(user_id)
+
+    if db_user is None:
+        raise DBUserNotFoundException
+
+    if db_user.is_deleted is True:
+        raise DBUserDeletedException
 
     # атрибуты, которые хотим изменить
     # attrs = ('first_name', 'last_name')
@@ -57,10 +72,29 @@ def patch_user(session: DBSession, user: RequestPatchUserDto, user_id: int) -> D
     return db_user
 
 
+def change_password(session: DBSession, hashed_password: bytes, user_id: int) -> DBUser:
+
+    db_user = session.get_user_by_id(user_id)
+
+    if db_user is None:
+        raise DBUserNotFoundException
+
+    db_user.password = hashed_password
+
+    return db_user
+
+
 def delete_user(session: DBSession, user_id: int) -> DBUser:
 
     db_user = session.get_user_by_id(user_id)
-    db_user.is_deleted = True
+
+    if db_user is None:
+        raise DBUserNotFoundException
+
+    if db_user.is_deleted is False:
+        db_user.is_deleted = True
+    else:
+        raise DBUserDeletedException
 
     return db_user
 

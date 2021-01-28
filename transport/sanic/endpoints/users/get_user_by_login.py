@@ -6,10 +6,10 @@ from api.response import ResponseGetUserByLoginDto
 
 from db.database import DBSession
 from db.queries import user as user_queries
-from db.exceptions import DBUserNotFoundException
+from db.exceptions import DBUserNotFoundException, DBUserDeletedException
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicUserNotFoundException
+from transport.sanic.exceptions import SanicUserNotFoundException, SanicUserDeletedException
 
 
 class GetUserByLoginEndpoint(BaseEndpoint):
@@ -25,6 +25,8 @@ class GetUserByLoginEndpoint(BaseEndpoint):
             user_info = user_queries.get_user(session, login=request_model.login)
         except DBUserNotFoundException:
             raise SanicUserNotFoundException('User not found')
+        except DBUserDeletedException:
+            raise SanicUserDeletedException('User deleted')
 
         response_model = ResponseGetUserByLoginDto(user_info)
 

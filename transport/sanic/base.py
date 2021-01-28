@@ -97,15 +97,6 @@ class SanicEndpoint:
     async def handler(self, request: Request, *args, **kwargs) -> BaseHTTPResponse:
         body = {}
 
-        # проверка нужна ли аутентификация
-        # если нужна, то вызываем предыдущий метод и проверяем токен на валидность
-        # if self.auth_required:
-        #    try:
-        #        body.update(self.import_body_auth(request))
-        #    except SanicAuthException as error:
-        #        return await self.make_response_json(status=error.status_code, message=str(error))
-
-        # обновляем словари и записываем туда данные с помощью предыдущих методов
         body.update(self.import_body_json(request))
         body.update(self.import_body_headers(request))
 

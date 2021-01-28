@@ -1,16 +1,16 @@
 from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
-from api.response.auth_user import ResponseAuthUserDto, AuthResponseObject
+from api.response.user.auth_user import ResponseAuthUserDto, AuthResponseObject
 from db.database import DBSession
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicUserNotFoundException, SanicPasswordHashException
+from transport.sanic.exceptions import SanicUserNotFoundException, SanicPasswordHashException, SanicUserDeletedException
 
 from api.request import RequestAuthUserDto
 
 from db.queries import user as user_queries
-from db.exceptions import DBUserNotFoundException
+from db.exceptions import DBUserNotFoundException, DBUserDeletedException
 
 from utils.password import check_hash, CheckPasswordHashException
 
@@ -29,6 +29,8 @@ class AuthUserEndpoint(BaseEndpoint):
             db_user = user_queries.get_user(session, login=request_model.login)
         except DBUserNotFoundException:
             raise SanicUserNotFoundException('User not found')
+        except DBUserDeletedException:
+            raise SanicUserDeletedException('User deleted')
 
         try:
             check_hash(request_model.password, db_user.password)

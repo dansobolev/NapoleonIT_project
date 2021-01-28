@@ -48,9 +48,17 @@ class DBSession:
     def get_all_users(self) -> List['DBUser']:
         return self._session.query(DBUser).filter(DBUser.is_deleted.isnot(True)).all()
 
+    # получение сообщения по id
+    def get_message_by_id(self, msg_id: int) -> DBMessage:
+        return self._session.query(DBMessage).filter(DBMessage.id == msg_id and
+                                                     DBMessage.is_deleted.isnot(True)).first()
+
     # получение всех сообщений конкретного пользователя
     def get_all_messages(self, user_id: int) -> List['DBMessage']:
-        return self._session.query(DBMessage).filter(DBMessage.recipient_id == user_id).all()
+        # также проверяется, что сообщения не удалены из БД
+        return self._session.query(DBMessage).filter(
+            DBMessage.recipient_id == user_id and DBMessage.is_deleted.isnot(True)
+        ).all()
 
     # фиксирование сессии
     def commit_session(self, need_close: bool = False):

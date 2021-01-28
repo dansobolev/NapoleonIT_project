@@ -33,6 +33,19 @@ class SanicUserNotFoundException(SanicException):
     status_code = 404
 
 
+# пользователь удален
+class SanicUserDeletedException(SanicException):
+    status_code = 404
+
+
 # не авторизированный пользователь
 class SanicAuthException(SanicException):
     status_code = 401
+
+
+class SanicMessageNotFoundException(SanicException):
+    status_code = 404
+
+
+class SanicMessageDeletedException(SanicException):
+    status_code = 404

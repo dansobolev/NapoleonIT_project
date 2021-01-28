@@ -18,6 +18,7 @@ def create_token(payload: dict) -> str:
     return jwt.encode(payload, UtilsConfig.secret_token, algorithm='HS256')
 
 
+# на выходе получаем словарь с payload
 def read_token(token: str) -> dict:
     try:
         return jwt.decode(token, UtilsConfig.secret_token, algorithms='HS256')

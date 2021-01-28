@@ -5,7 +5,7 @@ from api.request import RequestCreateMessageDto
 from api.response import ResponseGetCreatedMessageDto
 
 from db.database import DBSession
-from db.exceptions import DBUserNotFoundException, DBIntegrityException, DBDataException
+from db.exceptions import DBUserNotFoundException, DBIntegrityException, DBDataException, DBUserDeletedException
 from db.queries import user as user_queries
 from db.queries import message as message_queries
 
@@ -13,7 +13,7 @@ from transport.sanic.endpoints import BaseEndpoint
 
 
 # класс для создания сообщения пользователем
-from transport.sanic.exceptions import SanicUserNotFoundException, SanicDBException
+from transport.sanic.exceptions import SanicUserNotFoundException, SanicDBException, SanicUserDeletedException
 
 
 class CreateMessage(BaseEndpoint):
@@ -22,22 +22,20 @@ class CreateMessage(BaseEndpoint):
             self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
 
+        # TODO добавить проверку, что нельзя отправлять сообщения самому себе ?????
+
         # получение DTO объекта
         request_model = RequestCreateMessageDto(body)
 
         # проверяем, существуют ли два пользователя в БД (sender and recipient)
+        # проверяем, что оба пользователя не удалены из БД
         try:
             user_queries.get_user(session=session, user_id=request_model.recipient_id)
             user_queries.get_user(session=session, user_id=token['id'])
-        except:
-            # TODO DBUserNotFoundException
-            pass
-
-        # проверка на то, что оба пользователя удалены
-        try:
-            user_queries.get_user(session=session, user_id=token['id']).is_deleted
-        except:  # TODO DBUserDeletedException:
-            pass
+        except DBUserNotFoundException:
+            raise SanicUserNotFoundException('User not found')
+        except DBUserDeletedException:
+            raise SanicUserDeletedException('User deleted')
 
         # коммитим данные в БД
         try:

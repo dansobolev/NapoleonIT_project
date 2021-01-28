@@ -4,7 +4,10 @@ from .users.auth import AuthUserEndpoint
 from .users.get_user_by_login import GetUserByLoginEndpoint
 from .users.user import UserEndpoint
 from .users.get_all import AllUsersEndpoint
+from .users.user_password import ChangePasswordEndpoint
 from .health import HealthEndpoint
 
 from .messages.create import CreateMessage
 from .messages.get_all import GetAllMessagesEndpoint
+from .messages.message import MessageEndpoint
+from .messages.read_message import ReadMessage

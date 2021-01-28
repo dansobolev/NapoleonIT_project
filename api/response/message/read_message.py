@@ -5,13 +5,14 @@ from marshmallow import Schema, fields, pre_load, post_load
 from api.base import ResponseDto
 
 
-class ResponseGetCreatedMessageDtoSchema(Schema):
+class ResponseReadAndGetMessageDtoSchema(Schema):
     id = fields.Int(required=True)
     sender_id = fields.Int(required=True)
     recipient_id = fields.Int(required=True)
-    created_at = fields.Str(required=True)
+    created_at = fields.DateTime(required=True)
     updated_at = fields.DateTime(required=True)
-    message = fields.DateTime(required=True, allow_none=False)
+    message = fields.Str(required=True, allow_none=False)
+    is_read = fields.Boolean()
 
     # оба декораторы нужна, чтобы преобразовывать объект из datetime.datetime в str
     # до и после валидации
@@ -32,5 +33,5 @@ class ResponseGetCreatedMessageDtoSchema(Schema):
         return date
 
 
-class ResponseGetCreatedMessageDto(ResponseDto, ResponseGetCreatedMessageDtoSchema):
-    __schema__ = ResponseGetCreatedMessageDtoSchema
+class ResponseReadAndGetMessageDto(ResponseDto, ResponseReadAndGetMessageDtoSchema):
+    __schema__ = ResponseReadAndGetMessageDtoSchema
