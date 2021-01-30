@@ -24,8 +24,6 @@ class ChangeLoginEndpoint(BaseEndpoint):
 
         request_model = RequestPatchUserLoginDto(body)
 
-        # TODO протестировать работу в целом
-        # TODO протестировать, что нельзя менять логин у удаленных пользователей
         try:
             db_user = user_queries.change_login(session, request_model.login, user_id)
         except DBUserAlreadyExistsException:

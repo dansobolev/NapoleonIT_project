@@ -1,6 +1,6 @@
 # NapoleonIT Project
 
-Соло-проект, созданный во время прохождения курса в школе NapoleonIT [(Python BackEnd Developer Course)](https://backend.napoleonit.ru)
+Проект, созданный во время прохождения курса в школе NapoleonIT [(Python BackEnd Developer Course)](https://backend.napoleonit.ru)
 
 ## Technical task
 
@@ -39,17 +39,11 @@
     
     docker-compose up
 
-## Features
-
-- приложение запускается в докере, не нужно разворачивать БД локально
-- реализован **refresh token** ?????
-- проверка на сложность/длину пароля и логина (пароль и логин должны быть не меньше 6-и символов, для символов в пароле также имеются требования)
-- пользователь может выбрать удалить сообщение только у себя, или у себя и у собеседника
-- ...
-- ...
 
 ## Описание API
 ### Создание пользователя
+**Примечание:** логин должен быть не меньше 5 символов. Пароль должен быть не меньше
+6 символов и не больше 20, иметь хотя бы 1 цифру, минимум одну маленькую и одну заглавную букву.
 
     /user "POST"
         request: {
@@ -64,7 +58,9 @@
             "first_name": str,
             "last_name": str,
             "created_at": str,
-            "updated_at": str   
+            "updated_at": str,
+            "sent_message": int,
+            "received_messages": int
         }
 
 
@@ -89,7 +85,9 @@
             "first_name": str,
             "last_name": str,
             "created_at": str,
-            "updated_at": str   
+            "updated_at": str,
+            "sent_message": int,
+            "received_messages": int
         }
 
 ### Изменение информации о пользователе
@@ -107,6 +105,8 @@
             "last_name": str,
             "created_at": str,
             "updated_at": str 
+            "sent_message": int,
+            "received_messages": int
         }
 
 ### Удаление пользователя
@@ -203,6 +203,8 @@
         response: {
             "created_at": str,
             "total_messages": int
+            "sent_message": int,
+            "received_messages": int
         }
 
 ### Изменение пароля пользователя
@@ -230,7 +232,9 @@
             "first_name": str,
             "last_name": str,
             "created_at": str,
-            "updated_at": str 
+            "updated_at": str
+            "sent_message": int,
+            "received_messages": int
         }
 
 

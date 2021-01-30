@@ -1,7 +1,7 @@
 from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
-from api.response import ResponseReadAndGetMessageDto
+from api.response import ResponseGetMessageDto
 
 from db.database import DBSession
 from db.exceptions import DBUserDeletedException, DBIntegrityException, DBDataException, DBMessageNotFoundException, \
@@ -27,7 +27,7 @@ class ReadMessage(BaseEndpoint):
             raise SanicMessageDeletedException('Message deleted')
 
         # проверка на то, что пользователь читает сообщение от своего имени
-        if token['id'] != db_message.sender_id:
+        if token['id'] != db_message.recipient_id:
             return await self.make_response_json(status=403)
 
         # проверяем, что пользователь не удален
@@ -42,7 +42,7 @@ class ReadMessage(BaseEndpoint):
         except (DBIntegrityException, DBDataException) as error:
             raise SanicDBException(str(error))
 
-        response_model = ResponseReadAndGetMessageDto(db_message)
+        response_model = ResponseGetMessageDto(db_message)
 
         return await self.make_response_json(
             body=response_model.dump(),

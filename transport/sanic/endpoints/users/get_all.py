@@ -17,12 +17,14 @@ class AllUsersEndpoint(BaseEndpoint):
             self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
 
-        # TODO добавить поле с количеством сообщенеий для каждого пользователя
-
         try:
-            user_queries.get_user(session=session, user_id=token['id']).is_deleted
+            db_user = user_queries.get_user(session=session, user_id=token['id'])
         except DBUserDeletedException:
             raise SanicUserDeletedException('User deleted')
+
+        # проверяем, что пользователь посылает запрос от своего имени
+        if token.get('id') != db_user.id:
+            return await self.make_response_json(status=403)
 
         db_user = user_queries.get_users(session)
 

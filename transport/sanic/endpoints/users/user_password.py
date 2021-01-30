@@ -30,10 +30,7 @@ class ChangePasswordEndpoint(BaseEndpoint):
         except GeneratePasswordHashException as error:
             raise SanicPasswordHashException(str(error))
 
-        # TODO проверить можно ли поменять пароль у удаленного пользователя
-        # TODO если можно то обязательно добавить проверку
-
-        # проверка, что пользовательн не удален
+        # проверка, что пользователь не удален
         try:
             user_queries.change_password(session, hashed_password, user_id)
         except DBUserDeletedException:

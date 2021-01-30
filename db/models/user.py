@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, LargeBinary
+from sqlalchemy import Column, String, Boolean, LargeBinary, Integer
 
 from db.models import BaseModel
 
@@ -16,7 +16,8 @@ class DBUser(BaseModel):
 
     password = Column(
         LargeBinary(),
-        nullable=False)
+        nullable=False
+    )
 
     first_name = Column(String(50))
     last_name = Column(String(50))
@@ -25,4 +26,14 @@ class DBUser(BaseModel):
         Boolean,
         default=False,
         nullable=False,
+    )
+
+    sent_messages = Column(
+        Integer,
+        default=0,
+    )
+
+    received_messages = Column(
+        Integer,
+        default=0,
     )

@@ -6,10 +6,10 @@ from api.response import ResponseGetUserDto
 
 from db.database import DBSession
 from db.queries import user as user_queries
-from db.exceptions import DBIntegrityException, DBDataException, DBUserAlreadyExistsException
+from db.exceptions import DBIntegrityException, DBDataException, DBUserAlreadyExistsException, DBUserDeletedException
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicPasswordHashException, SanicDBException
+from transport.sanic.exceptions import SanicPasswordHashException, SanicDBException, SanicUserDeletedException
 
 from utils.password import generate_hash
 from utils.password import GeneratePasswordHashException
@@ -18,7 +18,9 @@ from utils.password import GeneratePasswordHashException
 # Endpoint для обработки запроса на создание пользователя
 class CreateUserEndpoint(BaseEndpoint):
 
-    async def method_post(self, request: Request, body: dict, session: DBSession, *args, **kwargs) -> BaseHTTPResponse:
+    async def method_post(
+            self, request: Request, body: dict, session: DBSession, *args, **kwargs
+    ) -> BaseHTTPResponse:
 
         # DTO объект
         request_model = RequestCreateUserDto(body)
@@ -44,4 +46,27 @@ class CreateUserEndpoint(BaseEndpoint):
         return await self.make_response_json(
             body=response_model.dump(),
             status=201
+        )
+
+    async def method_get(
+            self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs
+    ) -> BaseHTTPResponse:
+
+        # TODO потестить метод
+
+        try:
+            db_user = user_queries.get_user(session=session, user_id=token['id'])
+        except DBUserDeletedException:
+            raise SanicUserDeletedException('User deleted')
+
+        # проверяем, что пользователь посылает запрос от своего имени
+        if token.get('id') != db_user.id:
+            return await self.make_response_json(status=403)
+
+        db_user = user_queries.get_user(session=session, user_id=token['id'])
+
+        response_model = ResponseGetUserDto(db_user)
+
+        return await self.make_response_json(
+            status=200, body=response_model.dump()
         )

@@ -14,13 +14,14 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
             config=config, context=context, uri='/', methods=('GET', 'POST')
         ),
         endpoints.CreateUserEndpoint(
-            config=config, context=context, uri='/user', methods=['POST']
+            config=config, context=context, uri='/user', methods=['POST', 'GET'], auth_required=True
         ),
         endpoints.AuthUserEndpoint(
             config=config, context=context, uri='/user/auth', methods=['POST']
         ),
         endpoints.GetUserByLoginEndpoint(
-            config=config, context=context, uri='/user/get_user/<user_login:string>', methods=['GET']
+            config=config, context=context, uri='/user/get_user/<user_login:string>', methods=['GET'],
+            auth_required=True
         ),
         endpoints.UserEndpoint(
             config=config, context=context, uri='/user/<user_id:int>', methods=['PATCH', 'DELETE'], auth_required=True
@@ -30,7 +31,7 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
         ),
         endpoints.ChangePasswordEndpoint(
             config=config, context=context, uri='/user/change_password/<user_id:int>', methods=['PATCH'],
-            auth_required=True,
+            auth_required=True, password_changed=True,
         ),
         endpoints.ChangeLoginEndpoint(
             config=config, context=context, uri='/user/change_login/<user_id:int>', methods=['PATCH'],

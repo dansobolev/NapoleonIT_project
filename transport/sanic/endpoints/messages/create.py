@@ -22,24 +22,25 @@ class CreateMessage(BaseEndpoint):
             self, request: Request, body: dict, session: DBSession, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
 
-        # TODO добавить проверку, что нельзя отправлять сообщения самому себе ?????
-
         # получение DTO объекта
         request_model = RequestCreateMessageDto(body)
 
         # проверяем, существуют ли два пользователя в БД (sender and recipient)
         # проверяем, что оба пользователя не удалены из БД
         try:
-            user_queries.get_user(session=session, user_id=request_model.recipient_id)
+            recipient = user_queries.get_user(session=session, login=request_model.login)
             user_queries.get_user(session=session, user_id=token['id'])
         except DBUserNotFoundException:
             raise SanicUserNotFoundException('User not found')
         except DBUserDeletedException:
             raise SanicUserDeletedException('User deleted')
 
+        user_queries.update_messages_stats(session, login=request_model.login, role='recipient')
+        user_queries.update_messages_stats(session, user_id=token['id'], role='sender')
+
         # коммитим данные в БД
         try:
-            db_message = message_queries.create_message(session, request_model, token)
+            db_message = message_queries.create_message(session, request_model, token, recipient_id=recipient.id)
             session.commit_session()
         except (DBIntegrityException, DBDataException) as error:
             raise SanicDBException(str(error))

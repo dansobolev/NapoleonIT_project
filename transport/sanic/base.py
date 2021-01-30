@@ -17,7 +17,6 @@ class SanicEndpoint:
     # чтобы сделать будущим экземпляр этого класса вызываемым
     async def __call__(self, request: Request, *args, **kwargs) -> BaseHTTPResponse:
         # проверка нужна ли аутентификация
-        # если нужна, то вызываем предыдущий метод и проверяем токен на валидность
         if self.auth_required:
             try:
                 token = {

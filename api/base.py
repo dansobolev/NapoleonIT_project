@@ -11,8 +11,6 @@ class RequestDto:
         try:
             valid_data = self.__schema__(unknown=EXCLUDE).load(data)
         except ValidationError as error:
-            print(valid_data)
-            print("Except was here")
             raise ApiRequestValidationException(error.messages)
         else:
             self._import(valid_data)

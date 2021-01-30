@@ -56,9 +56,7 @@ class DBSession:
     # получение всех сообщений конкретного пользователя
     def get_all_messages(self, user_id: int) -> List['DBMessage']:
         # также проверяется, что сообщения не удалены из БД
-        return self._session.query(DBMessage).filter(
-            DBMessage.recipient_id == user_id and DBMessage.is_deleted.isnot(True)
-        ).all()
+        return self._session.query(DBMessage).filter(DBMessage.recipient_id == user_id).all()
 
     # фиксирование сессии
     def commit_session(self, need_close: bool = False):

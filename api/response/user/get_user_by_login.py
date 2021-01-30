@@ -9,7 +9,8 @@ class ResponseGetUserByLoginDtoSchema(Schema):
     id = fields.Int(required=True)
     login = fields.Str(required=True)
     created_at = fields.DateTime(required=True)
-    total_message = fields.Int(default=0)
+    sent_messages = fields.Int(required=True)
+    received_messages = fields.Int(required=True)
 
     # оба декораторы нужна, чтобы преобразовывать объект из datetime.datetime в str
     # до и после валидации

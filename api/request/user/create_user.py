@@ -1,3 +1,5 @@
+import re
+
 from marshmallow import Schema, fields, post_load
 
 from api.base import RequestDto
@@ -13,7 +15,7 @@ class RequestCreateUserDtoSchema(Schema):
     # проверяем длину пароля на валидность
     @post_load
     def check_login_password_length(self, data: dict, **kwargs):
-        if len(data['login']) < 6:
+        if len(data['login']) < 5:
             raise ApiRequestValidationException('Bad request')
 
         if len(data['password']) < 6:
@@ -21,7 +23,14 @@ class RequestCreateUserDtoSchema(Schema):
 
         return data
 
-    # TODO добавить валидацию по сложности пороля
+    @post_load
+    def check_password_strength(self, data: dict, **kwargs):
+        reg = re.compile('^(?=\S{6,20}$)(?=.*?\d)(?=.*?[a-z])(?=.*?[A-Z])')
+        result = re.search(reg, data['password'])
+        if not result:
+            raise ApiRequestValidationException('Bad request')
+
+        return data
 
 
 # можно добавить также второго родителя, чтобы IDE знал

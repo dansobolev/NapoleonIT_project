@@ -12,6 +12,8 @@ class ResponseGetUserDtoSchema(Schema):
     last_name = fields.Str(required=True)
     created_at = fields.DateTime(required=True)
     updated_at = fields.DateTime(required=True)
+    sent_messages = fields.Int(required=True)
+    received_messages = fields.Int(required=True)
 
     # оба декораторы нужна, чтобы преобразовывать объект из datetime.datetime в str
     # до и после валидации

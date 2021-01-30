@@ -7,12 +7,14 @@ from db.exceptions import DBMessageNotFoundException, DBMessageDeletedException
 from db.models import DBMessage
 
 
-def create_message(session: DBSession, message: RequestCreateMessageDto, token: dict) -> DBMessage:
+def create_message(
+        session: DBSession, message: RequestCreateMessageDto, token: dict, recipient_id: int
+) -> DBMessage:
     # создание модели DBMessage
     new_message = DBMessage(
         message=message.message,
         sender_id=token['id'],
-        recipient_id=message.recipient_id,
+        recipient_id=recipient_id,
     )
 
     # добавляем модель в БД
@@ -40,7 +42,10 @@ def get_message(session: DBSession, msg_id: int = None, is_read: bool = None) ->
 
 
 def get_all_messages(session: DBSession, user_id: int) -> List['DBMessage']:
-    return session.get_all_messages(user_id)
+    messages = session.get_all_messages(user_id)
+    list_of_messages = [message for message in messages if message.is_deleted is not True]
+
+    return list_of_messages
 
 
 def patch_message(session: DBSession, message: RequestPatchMessageDto, message_id: int) -> DBMessage:
@@ -55,9 +60,6 @@ def patch_message(session: DBSession, message: RequestPatchMessageDto, message_i
 
 def delete_message(session: DBSession, msg_id: int) -> DBMessage:
     db_message = session.get_message_by_id(msg_id)
-
-    if db_message is None:
-        raise DBMessageNotFoundException
 
     db_message.is_deleted = True
 

@@ -21,17 +21,17 @@ class MessageEndpoint(BaseEndpoint):
             self, request: Request, body: dict, session: DBSession, msg_id: int, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
 
-        # проверка на то, что пользователь редактирует сообщение, отправленное от его имени
-        if token['id'] != message_queries.get_message(session, msg_id).sender_id:
-            return await self.make_response_json(status=403)
-
-        # проверка, что такое сообщение есть в БД и не удалено
+        # проверяем, что сообщение есть в БД и не удалено
         try:
-            message_queries.get_message(session, msg_id)
+            db_message = message_queries.get_message(session, msg_id)
         except DBMessageNotFoundException:
             raise SanicMessageNotFoundException('Message not found')
         except DBMessageDeletedException:
             raise SanicMessageDeletedException('Message deleted')
+
+        # проверка на то, что пользователь редактирует сообщение, отправленное от его имени
+        if token['id'] != db_message.sender_id:
+            return await self.make_response_json(status=403)
 
         # проверяем, что пользователь не удален
         try:
@@ -59,18 +59,19 @@ class MessageEndpoint(BaseEndpoint):
             self, request: Request, body: dict, session: DBSession, msg_id: int, token: dict, *args, **kwargs
     ) -> BaseHTTPResponse:
 
-        # проверка на то, что пользователь редактирует сообщение, отправленное от его имени
-        if token['id'] != message_queries.get_message(session, msg_id).sender_id:
+        # проверяем, что сообщение есть в БД и не удалено
+        try:
+            db_message = message_queries.get_message(session, msg_id)
+        except DBMessageNotFoundException:
+            raise SanicMessageNotFoundException('Message not found')
+        except DBMessageDeletedException:
+            raise SanicMessageDeletedException('Message deleted')
+
+        # проверка на то, что пользователь пытается удалить сообщение, которое ему отправили
+        if token['id'] != db_message.recipient_id:
             return await self.make_response_json(status=403)
 
-        # TODO добавить флаг, чтобы пользователь мог выбирать удалить сообщение только у него в диалоге,
-        # TODO или и у него и у его собеседника
-
-        try:
-            # TODO протестировать что верно выдает ошибку
-            message_queries.delete_message(session, msg_id)
-        except DBMessageNotFoundException:
-            raise SanicMessageNotFoundException
+        message_queries.delete_message(session, msg_id)
 
         try:
             session.commit_session()

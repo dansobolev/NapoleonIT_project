@@ -72,6 +72,22 @@ def patch_user(
     return db_user
 
 
+def update_messages_stats(session: DBSession, *, user_id: int = None, login: str = None, role: str) -> DBUser:
+    db_user = None
+
+    if user_id is not None:
+        db_user = session.get_user_by_id(user_id)
+    elif login is not None:
+        db_user = session.get_user_by_login(login)
+
+    if role == 'sender':
+        db_user.sent_messages += 1
+    else:
+        db_user.received_messages += 1
+
+    return db_user
+
+
 def change_password(session: DBSession, hashed_password: bytes, user_id: int) -> DBUser:
 
     db_user = session.get_user_by_id(user_id)
