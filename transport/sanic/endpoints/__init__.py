@@ -3,6 +3,7 @@ from .users.create import CreateUserEndpoint
 from .users.auth import AuthUserEndpoint
 from .users.get_user_by_login import GetUserByLoginEndpoint
 from .users.user import UserEndpoint
+from .users.user_info import GetUserEndpoint
 from .users.get_all import AllUsersEndpoint
 from .users.user_password import ChangePasswordEndpoint
 from .users.user_login import ChangeLoginEndpoint
