@@ -2,7 +2,6 @@ from sanic.request import Request
 from sanic.response import BaseHTTPResponse
 
 from api.request import RequestPatchUserLoginDto
-from api.response import ResponseGetUserDto
 
 from db.database import DBSession
 from db.exceptions import DBIntegrityException, DBDataException, DBUserDeletedException, DBUserAlreadyExistsException

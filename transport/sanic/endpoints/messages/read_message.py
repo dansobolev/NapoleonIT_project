@@ -4,14 +4,17 @@ from sanic.response import BaseHTTPResponse
 from api.response import ResponseGetMessageDto
 
 from db.database import DBSession
-from db.exceptions import DBUserDeletedException, DBIntegrityException, DBDataException, DBMessageNotFoundException, \
+from db.exceptions import (
+    DBUserDeletedException, DBIntegrityException, DBDataException, DBMessageNotFoundException,
     DBMessageDeletedException
+)
 from db.queries import user as user_queries
 from db.queries import message as message_queries
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicUserDeletedException, SanicDBException, SanicMessageNotFoundException, \
-    SanicMessageDeletedException
+from transport.sanic.exceptions import (
+    SanicUserDeletedException, SanicDBException, SanicMessageNotFoundException, SanicMessageDeletedException
+)
 
 
 class ReadMessage(BaseEndpoint):

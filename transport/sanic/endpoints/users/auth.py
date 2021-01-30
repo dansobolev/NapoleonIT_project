@@ -5,7 +5,9 @@ from api.response.user.auth_user import ResponseAuthUserDto, AuthResponseObject
 from db.database import DBSession
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicUserNotFoundException, SanicPasswordHashException, SanicUserDeletedException
+from transport.sanic.exceptions import (
+    SanicUserNotFoundException, SanicPasswordHashException, SanicUserDeletedException
+)
 
 from api.request import RequestAuthUserDto
 

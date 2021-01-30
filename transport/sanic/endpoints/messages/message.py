@@ -5,14 +5,17 @@ from api.request import RequestPatchMessageDto
 from api.response import ResponseGetMessageDto
 
 from db.database import DBSession
-from db.exceptions import DBIntegrityException, DBDataException, DBUserDeletedException, DBMessageNotFoundException, \
+from db.exceptions import (
+    DBIntegrityException, DBDataException, DBUserDeletedException, DBMessageNotFoundException,
     DBMessageDeletedException
+)
 from db.queries import user as user_queries
 from db.queries import message as message_queries
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicDBException, SanicUserDeletedException, SanicMessageDeletedException, \
-    SanicMessageNotFoundException
+from transport.sanic.exceptions import (
+    SanicDBException, SanicUserDeletedException, SanicMessageDeletedException, SanicMessageNotFoundException
+)
 
 
 class MessageEndpoint(BaseEndpoint):

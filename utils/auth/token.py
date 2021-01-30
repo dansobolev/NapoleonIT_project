@@ -3,7 +3,6 @@
 import datetime
 
 import jwt
-
 from jwt.exceptions import PyJWTError
 
 from utils.auth.config import UtilsConfig

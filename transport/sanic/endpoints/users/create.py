@@ -6,10 +6,10 @@ from api.response import ResponseGetUserDto
 
 from db.database import DBSession
 from db.queries import user as user_queries
-from db.exceptions import DBIntegrityException, DBDataException, DBUserAlreadyExistsException, DBUserDeletedException
+from db.exceptions import DBIntegrityException, DBDataException, DBUserAlreadyExistsException
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicPasswordHashException, SanicDBException, SanicUserDeletedException
+from transport.sanic.exceptions import SanicPasswordHashException, SanicDBException
 
 from utils.password import generate_hash
 from utils.password import GeneratePasswordHashException
