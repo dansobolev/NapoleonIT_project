@@ -227,14 +227,8 @@
             "login": str,
         }
         response: {
-            "id": str,
-            "login": str,
-            "first_name": str,
-            "last_name": str,
-            "created_at": str,
-            "updated_at": str
-            "sent_message": int,
-            "received_messages": int
+            "message_status": str,
+            "status": int
         }
 
 

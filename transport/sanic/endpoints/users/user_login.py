@@ -25,7 +25,7 @@ class ChangeLoginEndpoint(BaseEndpoint):
         request_model = RequestPatchUserLoginDto(body)
 
         try:
-            db_user = user_queries.change_login(session, request_model.login, user_id)
+            user_queries.change_login(session, request_model.login, user_id)
         except DBUserAlreadyExistsException:
             return await self.make_response_json(status=409, message='User already exists')
         except DBUserDeletedException:
@@ -36,9 +36,4 @@ class ChangeLoginEndpoint(BaseEndpoint):
         except (DBIntegrityException, DBDataException) as error:
             raise SanicDBException(str(error))
 
-        response_model = ResponseGetUserDto(db_user)
-
-        return await self.make_response_json(
-            body=response_model.dump(),
-            status=200,
-        )
+        return await self.make_response_json(status=200)
