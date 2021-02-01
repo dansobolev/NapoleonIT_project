@@ -126,7 +126,7 @@
     /message "POST"
         request: {
             "message": str,
-            "recipient_id": int
+            "login": str
         }
         response: {
             "id": int,
