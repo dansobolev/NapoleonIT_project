@@ -1,32 +1,14 @@
-import datetime
+from marshmallow import fields
 
-from marshmallow import Schema, fields, post_load, pre_load
-
-from api.base import ResponseDto
+from api.base import ResponseDto, SchemaWithDateTime
 
 
-class ResponseGetUserByLoginDtoSchema(Schema):
+class ResponseGetUserByLoginDtoSchema(SchemaWithDateTime):
     id = fields.Int(required=True)
     login = fields.Str(required=True)
     created_at = fields.DateTime(required=True)
     sent_messages = fields.Int(required=True)
     received_messages = fields.Int(required=True)
-
-    # оба декораторы нужна, чтобы преобразовывать объект из datetime.datetime в str
-    # до и после валидации
-    @pre_load
-    @post_load
-    def deserialize_datetime(self, data: dict, **kwargs) -> dict:
-        if 'created_at' in data:
-            data['created_at'] = self.datetime_to_iso(data['created_at'])
-
-        return data
-
-    @staticmethod
-    def datetime_to_iso(date):
-        if isinstance(date, datetime.datetime):
-            return date.isoformat()
-        return date
 
 
 class ResponseGetUserByLoginDto(ResponseDto, ResponseGetUserByLoginDtoSchema):
