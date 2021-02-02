@@ -40,6 +40,10 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
             config=config, context=context, uri='/user/change_login/<user_id:int>', methods=['PATCH'],
             auth_required=True,
         ),
+        endpoints.RestoreUserEndpoint(
+            config=config, context=context, uri='user/restore/<login:string>', methods=['PATCH'],
+            auth_required=True,
+        ),
 
         # message
         endpoints.CreateMessage(

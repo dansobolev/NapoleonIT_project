@@ -7,6 +7,7 @@ from .users.user_info import GetUserEndpoint
 from .users.get_all import AllUsersEndpoint
 from .users.user_password import ChangePasswordEndpoint
 from .users.user_login import ChangeLoginEndpoint
+from .users.restore_user import RestoreUserEndpoint
 from .health import HealthEndpoint
 
 from .messages.create import CreateMessage

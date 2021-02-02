@@ -29,7 +29,7 @@ def create_user(session: DBSession, user: RequestCreateUserDto, hashed_password:
 
 
 # получение пользователя
-def get_user(session: DBSession, login: str = None, user_id: int = None) -> DBUser:
+def get_user(session: DBSession, login: str = None, user_id: int = None, undelete: bool = False) -> DBUser:
     db_user = None
 
     if login is not None:
@@ -41,7 +41,8 @@ def get_user(session: DBSession, login: str = None, user_id: int = None) -> DBUs
         raise DBUserNotFoundException
 
     if db_user.is_deleted is True:
-        raise DBUserDeletedException
+        if not undelete:
+            raise DBUserDeletedException
 
     return db_user
 
@@ -134,3 +135,10 @@ def delete_user(session: DBSession, user_id: int) -> DBUser:
 
 def get_users(session: DBSession) -> List['DBUser']:
     return session.get_all_users()
+
+
+def restore_user(login: str, session: DBSession):
+    db_user = session.get_user_by_login(login)
+    db_user.is_deleted = False
+
+    return db_user
