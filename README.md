@@ -1,4 +1,4 @@
-# NapoleonIT Project
+# Offline messenger
 
 Проект, созданный во время прохождения курса в школе NapoleonIT [(Python BackEnd Developer Course)](https://backend.napoleonit.ru)
 
