@@ -38,11 +38,11 @@ class DBSession:
 
     # поиск пользователя по login
     def get_user_by_login(self, login: str) -> DBUser:
-        return self._session.query(DBUser).filter(DBUser.login == login and DBUser.is_deleted.isnot(True)).first()
+        return self._session.query(DBUser).filter(DBUser.login == login).first()
 
     # поиск пользователя по id
     def get_user_by_id(self, id_: int) -> DBUser:
-        return self._session.query(DBUser).filter(DBUser.id == id_ and DBUser.is_deleted.isnot(True)).first()
+        return self._session.query(DBUser).filter(DBUser.id == id_).first()
 
     # получение всех пользователей
     def get_all_users(self) -> List['DBUser']:
@@ -50,8 +50,7 @@ class DBSession:
 
     # получение сообщения по id
     def get_message_by_id(self, msg_id: int) -> DBMessage:
-        return self._session.query(DBMessage).filter(DBMessage.id == msg_id and
-                                                     DBMessage.is_deleted.isnot(True)).first()
+        return self._session.query(DBMessage).filter(DBMessage.id == msg_id).first()
 
     # получение всех сообщений конкретного пользователя
     def get_all_messages(self, user_id: int) -> List['DBMessage']:
