@@ -51,7 +51,6 @@ class UserEndpoint(BaseEndpoint):
         try:
             user_queries.delete_user(session, user_id)
         except DBUserDeletedException:
-            # TODO протестить
             raise SanicUserDeletedException('User deleted')
         except DBUserNotFoundException:
             raise SanicUserNotFoundException('User not found')
