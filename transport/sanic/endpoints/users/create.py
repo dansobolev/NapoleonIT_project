@@ -27,12 +27,13 @@ class CreateUserEndpoint(BaseEndpoint):
 
         try:
             hashed_password = generate_hash(request_model.password)
+            secret_word = generate_hash(request_model.secret_word)
         except GeneratePasswordHashException as error:
             raise SanicPasswordHashException(str(error))
 
         try:
             # экземпляр базы данных
-            db_user = user_queries.create_user(session, request_model, hashed_password)
+            db_user = user_queries.create_user(session, request_model, hashed_password, secret_word)
             session.commit_session()
         # ошибка уникальности, то есть подразумевается, что такой пользователь
         # уже существует в базе

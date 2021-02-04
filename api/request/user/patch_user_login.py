@@ -8,6 +8,7 @@ from api.exceptions import ApiRequestValidationException
 
 class RequestPatchUserLoginDtoSchema(Schema):
     login = fields.Str(required=True, allow_none=False)
+    secret_word = fields.Str(required=True, allow_none=False)
 
     # проверяем длину логина на валидность
     @post_load

@@ -11,6 +11,7 @@ class RequestCreateUserDtoSchema(Schema):
     password = fields.Str(required=True, allow_none=False)
     first_name = fields.Str(required=True, allow_none=False)
     last_name = fields.Str(required=True, allow_none=False)
+    secret_word = fields.Str(required=True, allow_none=False)
 
     # проверяем длину пароля на валидность
     @post_load

@@ -12,13 +12,16 @@ from context import Context, ContextLockedException
 
 
 # создание модели пользователя в базе данных
-def create_user(session: DBSession, user: RequestCreateUserDto, hashed_password: bytes) -> DBUser:
+def create_user(
+        session: DBSession, user: RequestCreateUserDto, hashed_password: bytes, secret_word: bytes
+) -> DBUser:
     # создание модели DBUser
     new_user = DBUser(
         login=user.login,
         password=hashed_password,  # записываем в базу хэшированный пароль
         first_name=user.first_name,
         last_name=user.last_name,
+        secret_word=secret_word,
     )
 
     # сначала попробуем получить пользователя по login перед созданием записи в БД

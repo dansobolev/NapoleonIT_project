@@ -8,7 +8,8 @@ from db.exceptions import DBIntegrityException, DBDataException, DBUserDeletedEx
 from db.queries import user as user_queries
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicDBException, SanicUserDeletedException
+from transport.sanic.exceptions import SanicDBException, SanicUserDeletedException, SanicSecretWordHashException
+from utils.password import check_hash, CheckPasswordHashException
 
 
 class ChangeLoginEndpoint(BaseEndpoint):
@@ -24,11 +25,17 @@ class ChangeLoginEndpoint(BaseEndpoint):
         request_model = RequestPatchUserLoginDto(body)
 
         try:
-            user_queries.change_login(session, request_model.login, user_id)
+            db_user = user_queries.change_login(session, request_model.login, user_id)
         except DBUserAlreadyExistsException:
             return await self.make_response_json(status=409, message='User already exists')
         except DBUserDeletedException:
             raise SanicUserDeletedException('User deleted')
+
+        # проверяем, что secret_word валидный и совпадает с тем, который находится в БД
+        try:
+            check_hash(request_model.secret_word, db_user.secret_word)
+        except CheckPasswordHashException:
+            raise SanicSecretWordHashException('Error')
 
         try:
             session.commit_session()

@@ -10,6 +10,7 @@ from api.exceptions import ApiRequestValidationException
 
 class RequestPatchUserPasswordDtoSchema(Schema):
     password = fields.Str(required=True, allow_none=False)
+    secret_word = fields.Str(required=True, allow_none=False)
 
     # проверяем длину пароля на валидность
     @post_load

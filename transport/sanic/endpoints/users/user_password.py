@@ -8,9 +8,10 @@ from db.exceptions import DBIntegrityException, DBDataException, DBUserDeletedEx
 from db.queries import user as user_queries
 
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicDBException, SanicUserDeletedException, SanicPasswordHashException
+from transport.sanic.exceptions import SanicDBException, SanicUserDeletedException, SanicPasswordHashException, \
+    SanicSecretWordHashException
 
-from utils.password import generate_hash, GeneratePasswordHashException
+from utils.password import generate_hash, GeneratePasswordHashException, check_hash, CheckPasswordHashException
 
 
 class ChangePasswordEndpoint(BaseEndpoint):
@@ -20,7 +21,7 @@ class ChangePasswordEndpoint(BaseEndpoint):
     ) -> BaseHTTPResponse:
 
         # проверяем, что пользователь посылает запрос от своего имени
-        if token.get('id') != user_id:
+        if token['id'] != user_id:
             return await self.make_response_json(status=403)
 
         request_model = RequestPatchUserPasswordDto(body)
@@ -32,9 +33,15 @@ class ChangePasswordEndpoint(BaseEndpoint):
 
         # проверка, что пользователь не удален
         try:
-            user_queries.change_password(session, hashed_password, user_id)
+            db_user = user_queries.change_password(session, hashed_password, user_id)
         except DBUserDeletedException:
             raise SanicUserDeletedException('User deleted')
+
+        # проверяем, что secret_word валидный и совпадает с тем, который находится в БД
+        try:
+            check_hash(request_model.secret_word, db_user.secret_word)
+        except CheckPasswordHashException:
+            raise SanicSecretWordHashException('Error')
 
         try:
             session.commit_session()

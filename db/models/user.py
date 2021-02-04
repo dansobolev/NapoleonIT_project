@@ -22,6 +22,11 @@ class DBUser(BaseModel):
     first_name = Column(String(50))
     last_name = Column(String(50))
 
+    secret_word = Column(
+        LargeBinary(),
+        nullable=False
+    )
+
     is_deleted = Column(
         Boolean,
         default=False,

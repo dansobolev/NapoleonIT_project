@@ -23,6 +23,11 @@ class SanicPasswordHashException(SanicException):
     status_code = 500
 
 
+# исключение, связанное с секретным словом
+class SanicSecretWordHashException(SanicException):
+    status_code = 500
+
+
 # исключение, связанное с БД
 class SanicDBException(SanicException):
     status_code = 500

@@ -34,7 +34,7 @@ def get_routes(config: ApplicationConfig, context: Context) -> Tuple:
         ),
         endpoints.ChangePasswordEndpoint(
             config=config, context=context, uri='/user/change_password/<user_id:int>', methods=['PATCH'],
-            auth_required=True, password_changed=True,
+            auth_required=True,
         ),
         endpoints.ChangeLoginEndpoint(
             config=config, context=context, uri='/user/change_login/<user_id:int>', methods=['PATCH'],
