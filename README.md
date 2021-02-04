@@ -48,14 +48,17 @@
 ## Описание API
 ### Создание пользователя
 **Примечание:** логин должен быть не меньше 5 символов. Пароль должен быть не меньше
-6 символов и не больше 20, иметь хотя бы 1 цифру, минимум одну маленькую и одну заглавную букву.
+6 символов и не больше 20, иметь хотя бы 1 цифру, минимум одну маленькую и одну заглавную букву. Поле `secret_word`
+должно иметь длину не менее 8 символов (неизменяемо).
+
 
     /user "POST"
         request: {
             "login": str,
             "password": str,
             "first_name": str,
-            "last_name": str
+            "last_name": str,
+            "secret_word": str
         }
         response: {
             "id": int,
@@ -220,6 +223,7 @@
     /user/change_password/<user_id:int> "PATCH"
         request: {
             "password": str,
+            "secret_word": str
         }
         response: {
             "message_status": str,
@@ -232,6 +236,7 @@
     /user/change_login/<user_id:int> "PATCH"
         request: {
             "login": str,
+            "secret_word": str
         }
         response: {
             "message_status": str,
