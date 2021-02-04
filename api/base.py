@@ -1,4 +1,5 @@
 import datetime
+import re
 
 from marshmallow import Schema, EXCLUDE, ValidationError, pre_load, post_load
 
@@ -77,3 +78,14 @@ class SchemaWithDateTime(Schema):
         if isinstance(date, datetime.datetime):
             return date.isoformat()
         return date
+
+
+class SchemaWithPasswordStrength(Schema):
+    @post_load
+    def check_password_strength(self, data: dict, **kwargs):
+        reg = re.compile('^(?=\S{6,20}$)(?=.*?\d)(?=.*?[a-z])(?=.*?[A-Z])')
+        result = re.search(reg, data['password'])
+        if not result:
+            raise ApiRequestValidationException('Bad request')
+
+        return data

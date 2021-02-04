@@ -1,14 +1,12 @@
 # изменение пароля
 
-import re
+from marshmallow import fields, post_load
 
-from marshmallow import Schema, fields, post_load
-
-from api.base import RequestDto
+from api.base import RequestDto, SchemaWithPasswordStrength
 from api.exceptions import ApiRequestValidationException
 
 
-class RequestPatchUserPasswordDtoSchema(Schema):
+class RequestPatchUserPasswordDtoSchema(SchemaWithPasswordStrength):
     password = fields.Str(required=True, allow_none=False)
     secret_word = fields.Str(required=True, allow_none=False)
 
@@ -19,15 +17,6 @@ class RequestPatchUserPasswordDtoSchema(Schema):
             if len(data['password']) < 6:
                 raise ApiRequestValidationException('Bad request')
             return data
-
-    @post_load
-    def check_password_strength(self, data: dict, **kwargs):
-        reg = re.compile('^(?=\S{6,20}$)(?=.*?\d)(?=.*?[a-z])(?=.*?[A-Z])')
-        result = re.search(reg, data['password'])
-        if not result:
-            raise ApiRequestValidationException('Bad request')
-
-        return data
 
 
 class RequestPatchUserPasswordDto(RequestDto, RequestPatchUserPasswordDtoSchema):

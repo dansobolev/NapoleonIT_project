@@ -1,12 +1,10 @@
-import re
+from marshmallow import fields, post_load
 
-from marshmallow import Schema, fields, post_load
-
-from api.base import RequestDto
+from api.base import RequestDto, SchemaWithPasswordStrength
 from api.exceptions import ApiRequestValidationException
 
 
-class RequestCreateUserDtoSchema(Schema):
+class RequestCreateUserDtoSchema(SchemaWithPasswordStrength):
     login = fields.Str(required=True, allow_none=False)
     password = fields.Str(required=True, allow_none=False)
     first_name = fields.Str(required=True, allow_none=False)
@@ -15,20 +13,8 @@ class RequestCreateUserDtoSchema(Schema):
 
     # проверяем длину пароля на валидность
     @post_load
-    def check_login_password_length(self, data: dict, **kwargs):
-        if len(data['login']) < 5:
-            raise ApiRequestValidationException('Bad request')
-
-        if len(data['password']) < 6:
-            raise ApiRequestValidationException('Bad request')
-
-        return data
-
-    @post_load
-    def check_password_strength(self, data: dict, **kwargs):
-        reg = re.compile('^(?=\S{6,20}$)(?=.*?\d)(?=.*?[a-z])(?=.*?[A-Z])')
-        result = re.search(reg, data['password'])
-        if not result:
+    def check_login_password_secret_word_length(self, data: dict, **kwargs):
+        if len(data['login']) < 5 or len(data['password']) < 6 or len(data['secret_word']) < 8:
             raise ApiRequestValidationException('Bad request')
 
         return data
